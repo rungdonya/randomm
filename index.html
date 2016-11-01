@@ -76,7 +76,7 @@
                      document.write(tmp + '<input type="button" id="other" value= "to room"></input>');
                      console.log('krai wa');
                      document.getElementById('other').addEventListener("click", function(data) {
-                         socket.emit('showit');
+                         socket.emit('showit'); //send score and time pai duay  //player=1
                          console.log('test จะได้ไหม - -');
                      });
                 }else {
@@ -92,6 +92,7 @@
                 document.write(tmp);
                 console.log('chun dai len la wa');
             });
+            //socket.on(conclusion
 
 
     </script>

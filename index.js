@@ -95,11 +95,13 @@ io.sockets.on('connection',function (socket) {
                 });
 
                 socket.on('showit',function () {
+                    //if player==1 --> kon tee 1 just played   //keep score+time
                     io.to(rooms[roomno].second.id).emit('play', {
                         descriptions: '2nd player',num : num , sum: sum,playturn : true
                     });
                     console.log(rooms[roomno]);
                     console.log('2nd player turn');
+                    //else socket.emit(conclusion)
                 });
 
                 console.log('======================END=======================');
