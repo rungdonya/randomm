@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form>
+        <input type="button" id="q" value= "click"></input>
+    </form>
+    <form>
+        <input type="button" id="room" value= "to room"></input>
+    </form>
+    <p id="error"></p>
+    <form id="setName">
+        <input size="35" id="username"></input>
+        <input type="submit"></input>
+    </form>
+    <p id="player"></p>
+
+
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+            var socket = io.connect();
+            var $setName = $('#setName');
+            var $username = $('#username');
+            var $name = $('');
+            var $q = $('#q');
+            var $player = $('#player');
+            var $error = $('#error');
+            var $room = $('#room');
+            var $other = $('#other');
+
+            $q.click(function () {
+                $q.hide();
+                socket.emit('req');
+                console.log("plss");
+            });
+            $setName.submit(function (e) {
+                e.preventDefault();
+                console.log("dead");
+                socket.emit('send username', $username.val(),function (data){  //send username + detect duplicate user
+                    if(!data){
+                        $error.html("duplicate username");
+                    }else{
+                        $error.hide();
+                    }
+                });
+
+
+                //send event to server -msg box value
+                $name += $username.val();
+                console.log($name);
+                $username.val(' ');  //input box
+                //localStorage.setItem("username", $name);
+                // window.location.replace('/chat/');
+            });
+            socket.on('listOfUser',function (data) {   //add list of online user
+                var list = 'list of online player <br/>';
+                for(i=0;i<data.length;i++){
+                    list += data[i]+ '<br/>'
+                }
+                $player.html(list);
+            });
+            $room.click(function () {
+                $room.hide();
+                socket.emit('pair');
+               // console.log("pairing");
+            });
+            socket.on('connectToRoom',function(data){
+                document.body.innerHTML = '';
+                tmp = data.descriptions+'<br/>'+ data.sum + '<br/>' + data.num;
+                if(data.playturn){
+                     document.write(tmp + '<input type="button" id="other" value= "to room"></input>');
+                     console.log('krai wa');
+                     document.getElementById('other').addEventListener("click", function(data) {
+                         socket.emit('showit');
+                         console.log('test');
+                     });
+                }else {
+                    document.write(tmp);
+                    console.log('krai wa');
+                }
+
+            });
+
+            socket.on('play', function(data){
+                document.body.innerHTML = '';
+                tmp = data.descriptions+'<br/>'+ data.sum + '<br/>' + data.num;
+                document.write(tmp);
+                console.log('chun dai len la wa');
+            });
+
+
+    </script>
+
+</body>
+</html>
