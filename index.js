@@ -101,8 +101,18 @@ io.sockets.on('connection',function (socket) {
                     });
                     console.log(rooms[roomno]);
                     console.log('2nd player turn');
-                    //else socket.emit(conclusion)
+                    //else socket.emit(conclusion)  --->keb data tunglai player1Name, player1Score,player2Name, player2Score
                 });
+              /*socket.on('continue',function (data) {
+                    rooms[roomno].first.name = socket.data.winner;  //roomno pung nae nae
+                    io.to(rooms[roomno].first.name).emit('connectToRoom', {
+                        descriptions: '1st player',num : num, sum: sum, playturn : true
+                    });
+                    rooms[roomno].second.name = socket.data.looser;
+                    io.to(rooms[roomno].second.id).emit('connectToRoom', {
+                        descriptions: '2nd player',num : numnull , sum: 'x', playturn : false
+                    });
+                });  */
 
                 console.log('======================END=======================');
             }
