@@ -42,7 +42,7 @@ io.sockets.on('connection',function (socket) {
 
     socket.on('pair',function () {
        // clients.push(client);
-
+        console.log("Room "+roomno);
         temp = roomno;
         if(io.nsps['/'].adapter.rooms["room-"+roomno] && io.nsps['/'].adapter.rooms["room-"+roomno].length > 1) {
             roomno++;
@@ -58,50 +58,55 @@ io.sockets.on('connection',function (socket) {
         if(io.nsps['/'].adapter.rooms["room-" + roomno].length == 1) {
             strt = Math.floor(Math.random()*10)+1;
             console.log('Random Number to find starter :'+strt);
-            rooms[roomno-1]= new Object();
-            rooms[roomno-1].first =new Object();
-            rooms[roomno-1].second =new Object();
+            rooms[roomno]= new Object();
+            rooms[roomno].first =new Object();
+            rooms[roomno].second =new Object();
             if(strt<=5){
-                rooms[roomno-1].first.id = socket.id;
-                rooms[roomno-1].first.name = socket.name;
+                rooms[roomno].first.id = socket.id;
+                rooms[roomno].first.name = socket.name;
                 console.log(socket.name + ' plays first');
+
             }else{
-                rooms[roomno-1].second.id = socket.id;
-                rooms[roomno-1].second.name = socket.name;
+                rooms[roomno].second.id = socket.id;
+                rooms[roomno].second.name = socket.name;
                 console.log(socket.name + ' plays second');
             }
         }else if (io.nsps['/'].adapter.rooms["room-" + roomno].length == 2) {
-            if(rooms[roomno-1].first.id!=null){
-                rooms[roomno-1].second.id = socket.id;
-                rooms[roomno-1].second.name = socket.name;
+            if(rooms[roomno].first.id!=null){
+                rooms[roomno].second.id = socket.id;
+                rooms[roomno].second.name = socket.name;
                 console.log(socket.name + ' plays second');
+
             }else{
-                rooms[roomno-1].first.id = socket.id;
-                rooms[roomno-1].first.name = socket.name;
+                rooms[roomno].first.id = socket.id;
+                rooms[roomno].first.name = socket.name;
                 console.log(socket.name + ' plays first');
             }
-
+            console.log(rooms[roomno]);
             //Send this event to everyone in the room.
             //If there 2 ppl clicked button , emit sum
            // if (io.nsps['/'].adapter.rooms["room-" + roomno].length == 2) {
                 numnull = ['x','x','x','x','x','x'];
-                io.to(rooms[roomno-1].first.id).emit('connectToRoom', {
+                io.to(rooms[roomno].first.id).emit('connectToRoom', {
                     descriptions: '1st player',num : num, sum: sum, playturn : true
                 });
-                io.to(rooms[roomno-1].second.id).emit('connectToRoom', {
+                io.to(rooms[roomno].second.id).emit('connectToRoom', {
                     descriptions: '2nd player',num : numnull , sum: 'x', playturn : false
                 });
 
                 socket.on('showit',function () {
-                    io.to(rooms[roomno-1].second.id).emit('play', {
+                    io.to(rooms[roomno].second.id).emit('play', {
                         descriptions: '2nd player',num : num , sum: sum,playturn : true
                     });
+                    console.log(rooms[roomno]);
                     console.log('2nd player turn');
                 });
+
+                console.log('======================END=======================');
             }
 
 
-        console.log('======================END=======================');
+
      //   socket.leave("room-"+roomno);
     });
 
