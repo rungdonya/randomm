@@ -77,12 +77,15 @@
             socket.on('connectToRoom',function(data){
                 document.body.innerHTML = '';
                 tmp = data.descriptions+'<br/>'+ data.sum + '<br/>' + data.num;
+                var roomNum= data.room;
+                var originalProb = data.num;
+                var originalAns = data.sum;
                 if(data.playturn){
                      document.write(tmp + '<input type="button" id="other" value= "to room"></input>');
                      console.log('krai wa');
                      document.getElementById('other').addEventListener("click", function(data) {
-
-                         socket.emit('showit');
+                     //    console.log(roomNum);
+                         socket.emit('showit', {room: roomNum, sum: originalAns, num: originalProb });
 
                          console.log('test จะได้ไหม - -');
                      });

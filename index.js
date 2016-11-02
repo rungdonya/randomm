@@ -67,15 +67,17 @@ io.on('connection',function (socket) {
                 first: {},
                 second: {}
             };
-
+           // socket.room=roomno;
             rooms[roomno].first["id"] = socket.id;
             rooms[roomno].first["name"] = socket.name;
+         //   rooms[roomno].first["room"] = socket.room;
             // end random code
             // this is for second player joining
         } else if (io.nsps['/'].adapter.rooms["room-" + roomno].length == 2) {
 
             rooms[roomno].second["id"] = socket.id;
             rooms[roomno].second["name"] = socket.name;
+          //  rooms[roomno].second["room"] = socket.room;
 
 
             strt = Math.floor(Math.random()*10)+1;
@@ -93,10 +95,11 @@ io.on('connection',function (socket) {
            // if (io.nsps['/'].adapter.rooms["room-" + roomno].length == 2) {
                 numnull = ['x','x','x','x','x','x'];
                 io.to(rooms[roomno].first.id).emit('connectToRoom', {
-                    descriptions: '1st player',num : num, sum: sum, playturn : true
+                    descriptions: '1st player',num : num, sum: sum, playturn : true, room: roomno
                 });
+            console.log(roomno);
                 io.to(rooms[roomno].second.id).emit('connectToRoom', {
-                    descriptions: '2nd player',num : numnull , sum: 'x', playturn : false
+                    descriptions: '2nd player',num : numnull , sum: 'x', playturn : false, room: roomno
                 });
 
 
@@ -115,22 +118,22 @@ io.on('connection',function (socket) {
                 console.log('======================END=======================');
             }
 
-        socket.on('showit', function() {
+        socket.on('showit', function(data) {
 
             console.log("player "+socket.id);
 
             //if player==1 --> kon tee 1 just played   //keep score+time
-            if (socket.id === rooms[roomno].first.id) {
-                io.to(rooms[roomno].second.id).emit('play', {
-                    descriptions: '2nd player', num: num, sum: sum, playturn: true
+            if (socket.id === rooms[data.room].first.id) {
+                io.to(rooms[data.room].second.id).emit('play', {
+                    descriptions: '2nd player', num: data.num, sum: data.sum, playturn: true
                 });
-                console.log(rooms[roomno]);
+                console.log(rooms[data.room]);
                 console.log('2nd player turn');
             } else {
-                io.to(rooms[roomno].first.id).emit('play', {
-                    descriptions: '2nd player', num: num, sum: sum, playturn: true
+                io.to(rooms[data.room].first.id).emit('play', {
+                    descriptions: '2nd player', num: data.num, sum: data.sum, playturn: true
                 });
-                console.log(rooms[roomno]);
+                console.log(rooms[data.room]);
                 console.log('2nd player turn');
             }
             //else socket.emit(conclusion)  --->keb data tunglai player1Name, player1Score,player2Name, player2Score
