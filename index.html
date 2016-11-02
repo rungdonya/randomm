@@ -26,7 +26,7 @@
             var socket = io.connect();
             var $setName = $('#setName');
             var $username = $('#username');
-            var $name = $('');
+            var $name = "";
             var $q = $('#q');
             var $player = $('#player');
             var $error = $('#error');
@@ -39,6 +39,7 @@
                 console.log("plss");
             });
             $setName.submit(function (e) {
+                // prevent page refresh
                 e.preventDefault();
                 console.log("dead");
                 socket.emit('send username', $username.val(),function (data){  //send username + detect duplicate user
@@ -57,6 +58,8 @@
                 //localStorage.setItem("username", $name);
                 // window.location.replace('/chat/');
             });
+
+            // listen to list of user
             socket.on('listOfUser',function (data) {   //add list of online user
                 var list = 'list of online player <br/>';
                 for(i=0;i<data.length;i++){
@@ -64,11 +67,13 @@
                 }
                 $player.html(list);
             });
+
             $room.click(function () {
                 $room.hide();
                 socket.emit('pair');
                // console.log("pairing");
             });
+
             socket.on('connectToRoom',function(data){
                 document.body.innerHTML = '';
                 tmp = data.descriptions+'<br/>'+ data.sum + '<br/>' + data.num;
@@ -76,7 +81,9 @@
                      document.write(tmp + '<input type="button" id="other" value= "to room"></input>');
                      console.log('krai wa');
                      document.getElementById('other').addEventListener("click", function(data) {
-                         socket.emit('showit'); //send score and time pai duay  //player=1
+
+                         socket.emit('showit');
+
                          console.log('test จะได้ไหม - -');
                      });
                 }else {
